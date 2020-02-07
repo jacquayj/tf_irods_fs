@@ -1,8 +1,8 @@
 # tf_irods_fs: TensorFlow iRODS Filesystem
 
-A native iRODS filesystem for TensorFlow
+<img align="left" title="iRODS <3 TF" width="500px" src="logo.png">
 
-![iRODS <3 TF](/logo.png)
+### A native iRODS filesystem for TensorFlow
 
 ## Helpful Links
 
