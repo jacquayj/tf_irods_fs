@@ -11,6 +11,16 @@ A native iRODS filesystem for TensorFlow
 * https://github.com/korydraughn/irods_api_examples#irods-filesystem
 * https://docs.w3cub.com/tensorflow~guide/extend/adding_an_op/#build_the_op_library
 
+## Deps
+
+* A python environment with `tensorflow` installed
+
+## Build
+
+```
+$ ./build.sh
+```
+
 ## Usage
 
 ```python
