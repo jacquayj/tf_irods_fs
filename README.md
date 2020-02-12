@@ -26,9 +26,9 @@ $ ./build.sh
 ```python
 import tensorflow as tf
 
-tf.load_file_system_library('irods_file_system.so')
+tf.load_library('irods_file_system.so')
 
-with tf.gfile.Open("irods://path/to/file.txt") as w:
-    w.write("hi")
+with tf.io.gfile.GFile("irods://path/to/file.txt", mode='w') as f:
+    f.write("hi")
 
 ```

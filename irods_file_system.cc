@@ -16,9 +16,7 @@ static const int iRODSGetChildrenMaxKeys = 100;
 
 class iRODSRandomAccessFile : public RandomAccessFile {
  public:
-  iRODSRandomAccessFile(const string& bucket, const string& object,
-                     std::shared_ptr<void> s3_client)
-      : bucket_(bucket), object_(object), s3_client_(s3_client) {}
+  iRODSRandomAccessFile() {}
 
   Status Name(StringPiece* result) const override {
     return errors::Unimplemented("iRODSRandomAccessFile does not support Name()");
@@ -36,12 +34,14 @@ class iRODSRandomAccessFile : public RandomAccessFile {
   std::shared_ptr<void> s3_client_;
 };
 
-class S3WritableFile : public WritableFile {
+class iRODSWritableFile : public WritableFile {
  public:
-  S3WritableFile(const string& bucket, const string& object,
-                 std::shared_ptr<void> s3_client) {}
+  iRODSWritableFile() {}
 
   Status Append(StringPiece data) override {
+
+    std::cout << data;
+
     return Status::OK();
   }
 
@@ -52,13 +52,25 @@ class S3WritableFile : public WritableFile {
   Status Flush() override { return Sync(); }
 
   Status Name(StringPiece* result) const override {
-    return errors::Unimplemented("S3WritableFile does not support Name()");
+    return errors::Unimplemented("iRODSWritableFile does not support Name()");
   }
 
   Status Sync() override {
     return Status::OK();
   }
 
+};
+
+class iRODSReadOnlyMemoryRegion : public ReadOnlyMemoryRegion {
+ public:
+  iRODSReadOnlyMemoryRegion(std::unique_ptr<char[]> data, uint64 length)
+      : data_(std::move(data)), length_(length) {}
+  const void* data() override { return reinterpret_cast<void*>(data_.get()); }
+  uint64 length() override { return length_; }
+
+ private:
+  std::unique_ptr<char[]> data_;
+  uint64 length_;
 };
 
 }  // namespace
@@ -69,21 +81,33 @@ iRODSFileSystem::~iRODSFileSystem() {}
 
 Status iRODSFileSystem::NewRandomAccessFile(
     const string& fname, std::unique_ptr<RandomAccessFile>* result) {
+  result->reset(new iRODSRandomAccessFile());
+
   return Status::OK();
 }
 
 Status iRODSFileSystem::NewWritableFile(const string& fname,
                                      std::unique_ptr<WritableFile>* result) {
+  result->reset(new iRODSWritableFile());
+
   return Status::OK();
 }
 
 Status iRODSFileSystem::NewAppendableFile(const string& fname,
                                        std::unique_ptr<WritableFile>* result) {
+  result->reset(new iRODSWritableFile());
+
+  
   return Status::OK();
 }
 
 Status iRODSFileSystem::NewReadOnlyMemoryRegionFromFile(
     const string& fname, std::unique_ptr<ReadOnlyMemoryRegion>* result) {
+  uint64 size;
+  TF_RETURN_IF_ERROR(GetFileSize(fname, &size));
+  std::unique_ptr<char[]> data(new char[size]);
+  result->reset(new iRODSReadOnlyMemoryRegion(std::move(data), size));
+
   return Status::OK();
 }
 
