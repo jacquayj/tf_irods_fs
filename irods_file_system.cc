@@ -4,7 +4,6 @@
 
 #include "tensorflow/core/platform/file_system_helper.h"
 #include "tensorflow/core/platform/mutex.h"
-#include "tensorflow/core/platform/path.h"
 #include "tensorflow/core/platform/str_util.h"
 
 namespace tensorflow {
