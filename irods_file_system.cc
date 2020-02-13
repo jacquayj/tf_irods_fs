@@ -6,6 +6,8 @@
 #include "tensorflow/core/platform/mutex.h"
 #include "tensorflow/core/platform/str_util.h"
 
+#include <irods/filesystem.hpp>
+
 namespace tensorflow {
 
 namespace {

@@ -1,3 +1,4 @@
 tensorflow/**/*
 tensorflow
 irods_file_system.so
+.venv
