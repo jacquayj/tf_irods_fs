@@ -6,7 +6,10 @@
 #include "tensorflow/core/platform/mutex.h"
 #include "tensorflow/core/platform/str_util.h"
 
+#include <irods/rodsErrorTable.h>
+#include <irods/connection_pool.hpp>
 #include <irods/filesystem.hpp>
+
 
 namespace tensorflow {
 
@@ -40,8 +43,31 @@ class iRODSWritableFile : public WritableFile {
   iRODSWritableFile() {}
 
   Status Append(StringPiece data) override {
+    rodsEnv env;
 
-    std::cout << data;
+    if (getRodsEnv(&env) < 0) {
+      std::cout << "lolx";
+      return Status::OK();
+    }
+    rErrMsg_t errMsg;
+
+    std::string host = "192.168.1.100";  
+    std::string user = "rods";  
+    std::string zone = "tempZone"; 
+
+    const int connection_pool_size = 4;
+    const int refresh_time_in_secs = 600;
+
+    // Creates a connection pool that manages 4 rcComm_t connections
+    // and refreshes each connection every 600 seconds.
+    irods::connection_pool pool{connection_pool_size,
+                                env.rodsHost,
+                                env.rodsPort,
+                                env.rodsUserName,
+                                env.rodsZone,
+                                refresh_time_in_secs};
+
+    auto conn = pool.get_connection();
 
     return Status::OK();
   }
