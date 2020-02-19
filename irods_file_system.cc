@@ -6,6 +6,7 @@
 #include "tensorflow/core/platform/mutex.h"
 #include "tensorflow/core/platform/str_util.h"
 
+#include <irods/rodsClient.h>
 #include <irods/rodsErrorTable.h>
 #include <irods/connection_pool.hpp>
 #include <irods/filesystem.hpp>
