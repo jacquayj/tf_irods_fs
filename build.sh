@@ -16,11 +16,12 @@ export TF_LFLAGS=( $(python -c 'import tensorflow as tf; print(" ".join(tf.sysco
         -I/opt/irods-externals/boost1.60.0-0/include \
         -I/usr/include/irods \
         ${TF_CFLAGS[@]} \
-        -o libirods_file_system.so \
+        -o irods_file_system.so \
         irods_file_system.cc \
         -L/opt/irods-externals/clang3.8-0/lib \
         -L/opt/irods-externals/boost1.60-0/lib \
         -Wl,-rpath,/opt/irods-externals/clang3.8-0/lib \
+        -Wl,-rpath,/usr/local/lib/python2.7/dist-packages/tensorflow_core \
         -lirods_client \
         ${TF_LFLAGS[@]}
 
